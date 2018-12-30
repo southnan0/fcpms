@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.czn.fcpms.dao.AccountDao">
+    <select id="accountList" resultType="com.czn.fcpms.entity.Account">
+        select account_id,user_name,account_type,login_name,mobile,status,created_time,created_by,org_ids,role_ids
+        from t_account
+        order by created_time
+        desc
+    </select>
+    <select id="account" resultType="com.czn.fcpms.entity.Account">
+        select account_id,user_name,account_type,login_name,mobile,status,created_time,created_by,org_ids,role_ids
+        from t_account
+        where
+        account_id=#{accountId}
+    </select>
+    <insert id="addAccount" parameterType="com.czn.fcpms.entity.Account" useGeneratedKeys="true" keyProperty="accountId" keyColumn="account_id">
+        insert into
+        t_account(org_ids,login_name,password,user_name,mobile)
+        values (#{orgIds},#{loginName},#{password},#{userName},#{mobile})
+    </insert>
+</mapper>
