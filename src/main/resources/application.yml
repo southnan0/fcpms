@@ -5,11 +5,11 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/db_fcpms
     username: root
-    password: 123
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
   mybatis_config_file: mybatis-config.xml
   mapper_path: /mapper/**.xml
-  entity_package: com.czn.fcpms
+  entity_package: com.czn.fcpms.entity

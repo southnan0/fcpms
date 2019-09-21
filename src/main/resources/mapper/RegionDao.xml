@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.czn.fcpms.dao.RegionDao">
+    <sql id="regionItem">
+        region_id,region_code,path,parent_id,region_name,short_name,
+        zip_code,region_pinyin,lng,lat,level,sort,is_hot,is_delete
+    </sql>
+    <select id="provinceList" resultType="com.czn.fcpms.entity.Region">
+        select <include refid="regionItem"></include>
+        from t_comm_region
+        where level = 1
+    </select>
+
+    <select id="regionListById" resultType="com.czn.fcpms.entity.Region">
+        select <include refid="regionItem"></include>
+        from t_comm_region
+        where parent_id = #{parentId}
+    </select>
+
+    <select id="region" resultType="com.czn.fcpms.entity.Region">
+        select <include refid="regionItem"></include>
+        from  t_comm_region
+        where region_id = #{regionId}
+    </select>
+</mapper>

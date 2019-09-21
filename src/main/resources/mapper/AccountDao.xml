@@ -4,21 +4,66 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.czn.fcpms.dao.AccountDao">
+    <sql id="selectAccountItem">
+        select distinct a.account_id,
+        a.user_name,
+        a.account_type,
+        a.login_name,
+        a.mobile,
+        a.password,
+        a.status,
+        a.created_time,
+        a.created_by,
+        a.org_ids,
+        a.role_ids,
+        a.is_deleted, group_concat(c.org_name) as org_names
+        from
+        db_fcpms.t_account a
+        join
+        mysql.help_topic b
+        on b.help_topic_id &lt;(length(a.org_ids) - length(replace(a.org_ids,',',''))+1)
+        join db_fcpms.t_organize c where substring_index(substring_index(a.org_ids,',',b.help_topic_id+1),',',-1) = c.org_id
+        group by account_id
+    </sql>
+
     <select id="accountList" resultType="com.czn.fcpms.entity.Account">
-        select account_id,user_name,account_type,login_name,mobile,status,created_time,created_by,org_ids,role_ids
-        from t_account
+        <include refid="selectAccountItem"></include>
         order by created_time
         desc
     </select>
+
     <select id="account" resultType="com.czn.fcpms.entity.Account">
-        select account_id,user_name,account_type,login_name,mobile,status,created_time,created_by,org_ids,role_ids
-        from t_account
+        <include refid="selectAccountItem"></include>
         where
         account_id=#{accountId}
     </select>
-    <insert id="addAccount" parameterType="com.czn.fcpms.entity.Account" useGeneratedKeys="true" keyProperty="accountId" keyColumn="account_id">
+
+    <insert id="addAccount" parameterType="com.czn.fcpms.entity.Account" useGeneratedKeys="true" keyProperty="accountId"
+            keyColumn="account_id">
         insert into
-        t_account(org_ids,login_name,password,user_name,mobile)
-        values (#{orgIds},#{loginName},#{password},#{userName},#{mobile})
+        t_account(org_ids,login_name,password,user_name,mobile,created_time,created_by,status)
+        values (#{orgIds},#{loginName},#{password},#{userName},#{mobile},#{createdTime},#{createdBy}, 1)
     </insert>
+
+    <update id="updateAccount">
+        update t_account
+        set org_ids=#{orgIds},
+        login_name=#{loginName},
+        password=#{password},
+        user_name=#{userName},
+        mobile=#{mobile},
+        updated_time=#{updatedTime},
+        updated_by=#{updatedBy}
+        where account_id = #{accountId}
+    </update>
+
+    <update id="deleteAccount">
+        update t_account
+        set is_deleted = 1
+        where account_id = #{account}
+    </update>
+
+    <select id="selectPassword" parameterType="java.lang.String" resultType="java.lang.String">
+        select a.password from t_account a where mobile = #{mobile}
+    </select>
 </mapper>

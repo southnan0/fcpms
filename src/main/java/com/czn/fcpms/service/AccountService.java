@@ -8,4 +8,7 @@ public interface AccountService {
     List<Account> accountList();
     Account account(int accountId);
     Integer addAccount(Account account);
+    Integer updateAccount(int accountId, Account account);
+    Integer deleteAccount(int accountId);
+    String selectPassword(String mobile);
 }

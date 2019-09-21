@@ -27,4 +27,17 @@ public class AccountServiceImpl implements AccountService {
     public Integer addAccount(Account account){
         return accountDao.addAccount(account);
     }
+
+    @Override
+    public Integer updateAccount(int accountId, Account account){
+        return accountDao.updateAccount(accountId, account);
+    }
+
+    @Override
+    public Integer deleteAccount(int accountId){
+        return accountDao.deleteAccount(accountId);
+    }
+
+    @Override
+    public String selectPassword(String mobile){return accountDao.selectPassword(mobile);}
 }
